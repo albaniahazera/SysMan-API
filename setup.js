@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const { execSync } = require('child_process');
 const nodejs_version = process.version;
-const USER = process.env.USER || process.env.USERNAME;
+const USER = process.env.SUDO_USER || process.env.USER || process.env.USERNAME;
 const NODE_PATH = process.execPath;
 
 if (USER === "root" || USER === "Administrator") {
