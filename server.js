@@ -12,7 +12,7 @@ const setup = require('./setup.js');
 app.use(express.json());
 app.use(cors());
 
-if (fs.existsSync('./install_bot_service.sh')) {
+if (fs.existsSync('./install_service.sh')) {
   setup.setup();
   process.exit(0);
 }
