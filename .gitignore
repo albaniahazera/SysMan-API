@@ -1,0 +1,16 @@
+# Directory Dependence
+node_modules/
+dist/
+.env
+
+# Log
+npm-debug.log
+npm-debug.log.*
+yarn-error.log
+test_output/
+*.log
+
+# File OS and Editor
+.DS_Store
+.vscode/
+.idea/
