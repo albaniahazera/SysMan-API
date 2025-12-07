@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+const { execSync, spawn } = require('child_process');
 
 exports.shutdown_system = (async (req, res) => {
     try {
@@ -29,3 +29,61 @@ exports.restart_jellyfin = (async (req, res) => {
         res.status(500).json({ error: 'Failed to restart jellyfin' });
     }
 });
+
+exports.update_system = (async (req, res) => {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Transfer-Encoding', 'chunked');
+
+    const update = spawn('sudo', ['apt', 'update', '-y']);
+
+    try {
+        update.stdout.on('data', (data) => {
+            res.write(data.toString());
+        });
+        update.stderr.on('data', (data) => {
+            console.error("Update process error:", data.toString());
+            res.write(`ERROR: ${data.toString()}`);
+        });
+        update.on('close', (code) => {
+            res.write(`\nUpdate process exited with code ${code}\n`);
+            res.end();
+        });
+        update.on('error', (error) => {
+            console.error("Update process failed:", error.message);
+            res.write(`\nERROR: ${error.message}\n`);
+            res.end();
+        });
+    }catch (error) {
+        console.error("System update failed:", error.message);
+        res.status(500).json({ error: 'Failed to update system' });
+    }
+})
+
+exports.upgrade_system = (async (req, res) => {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Transfer-Encoding', 'chunked');
+
+    const upgrade = spawn('sudo', ['apt', 'upgrade', '-y']);
+
+    try {
+        upgrade.stdout.on('data', (data) => {
+            res.write(data.toString());
+        });
+        upgrade.stderr.on('data', (data) => {
+            console.error("Upgrade process error:", data.toString());
+            res.write(`ERROR: ${data.toString()}`);
+        });
+        upgrade.on('close', (code) => {
+            res.write(`\nUpgrade process exited with code ${code}\n`);
+            res.end();
+        });
+        upgrade.on('error', (error) => {
+            console.error("Upgrade process failed:", error.message);
+            res.write(`\nERROR: ${error.message}\n`);
+            res.end();
+        });
+    }catch (error) {
+        console.error("System upgrade failed:", error.message);
+        res.status(500).json({ error: 'Failed to upgrade system' });
+    }
+})

@@ -2,18 +2,16 @@ const si = require('systeminformation');
 
 exports.sys_status = (async (req, res) => {
     try {
-        const [cpu, memory, os_info, ip, disk] = await Promise.all([
+        const [cpu, memory, os_info, disk] = await Promise.all([
             si.currentLoad(),
             si.mem(),
             si.osInfo(),
-            si.networkInterfaces(),
             si.fsSize()
         ]);
 
         res.json({
             cpu_load: cpu.currentLoad.toFixed(2),
             os_distro: os_info.distro,
-            ip_address: ip.find(iface => !iface.internal && iface.ip4).ip4,
             memory_usage: {
                 total: (memory.total / (1024 ** 3)).toFixed(2),
                 free: (memory.free / (1024 ** 3)).toFixed(2),
@@ -27,6 +25,7 @@ exports.sys_status = (async (req, res) => {
             }))
         });
     } catch (error) {
+        console.error('Error retrieving system data:', error.message);
         res.status(500).json({ error: 'Failed to retrieve system data' });
     }
 })

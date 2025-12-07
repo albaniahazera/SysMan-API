@@ -4,8 +4,9 @@ const { execSync } = require('child_process');
 const nodejs_version = process.version;
 const USER = process.env.SUDO_USER || process.env.USER || process.env.USERNAME;
 const NODE_PATH = process.execPath;
+const os = require('os');
 
-if (USER === "root" || USER === "Administrator") {
+if (USER === "root") {
     console.error("Do not run this setup script as ROOT/Administrator. Please use a standard user account with sudo privileges.");
     process.exit(1);
 }
@@ -51,6 +52,8 @@ function execute_install_sh() {
 function setup() {
     const majorVersion = parseInt(nodejs_version.replace('v', '').split('.')[0]);
 
+    console.log("Running on OS:", os.type(), os.release(), os.platform());
+    console.log("Checking Node.js version...");
     if (!nodejs_version) {
         console.error("Unable to determine Node.js version.");
         process.exit(1);
