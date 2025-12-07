@@ -4,7 +4,9 @@ const { execSync } = require('child_process');
 const nodejs_version = process.version;
 const USER = process.env.SUDO_USER || process.env.USER || process.env.USERNAME;
 const NODE_PATH = process.execPath;
+const si = require('systeminformation');
 const os = require('os');
+const os_info = si.osInfoSync();
 
 if (USER === "root") {
     console.error("Do not run this setup script as ROOT/Administrator. Please use a standard user account with sudo privileges.");
@@ -38,7 +40,7 @@ function execute_install_sh() {
     const script_path = path.join(__dirname, 'install_service.sh');
     const service_path = path.join(__dirname, 'bot_server.service');
 
-    console.log("\nStarting installation... You may enter SUDO Password.");
+    console.log("\nStarting installation... You may need enter SUDO Password.");
     try {
         execSync(`sudo bash "${script_path}" "${service_path}"`, { stdio: 'inherit' });
         console.log("\nInstallation has been executed");
@@ -52,7 +54,7 @@ function execute_install_sh() {
 function setup() {
     const majorVersion = parseInt(nodejs_version.replace('v', '').split('.')[0]);
 
-    console.log("Running on OS:", os.type(), os.release(), os.arch());
+    console.log("Running On:", os_info.distro, os.type(), os.release(), os.arch());
     console.log("Checking Node.js version...");
     if (!nodejs_version) {
         console.error("Unable to determine Node.js version.");

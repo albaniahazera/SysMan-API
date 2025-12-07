@@ -34,7 +34,9 @@ exports.update_system = (async (req, res) => {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.setHeader('Transfer-Encoding', 'chunked');
 
-    const update = spawn('sudo', ['-n' ,'apt', 'update', '-y']);
+    const update = spawn('sudo', ['-n' ,'apt', 'update', '-y'], {
+        env: { ...process.env, DEBIAN_FRONTEND: 'noninteractive' }
+    });
 
     try {
         update.stdout.on('data', (data) => {
@@ -63,7 +65,9 @@ exports.upgrade_system = (async (req, res) => {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.setHeader('Transfer-Encoding', 'chunked');
 
-    const upgrade = spawn('sudo', ['-n', 'apt', 'upgrade', '-y']);
+    const upgrade = spawn('sudo', ['-n', 'apt', 'upgrade', '-y'], {
+        env: { ...process.env, DEBIAN_FRONTEND: 'noninteractive' }
+    });
 
     try {
         upgrade.stdout.on('data', (data) => {
