@@ -20,7 +20,7 @@ const os = require('os');
   app.use(express.json());
   app.use(cors());
   
-  if (fs.existsSync('./install.sh')) {
+  if (fs.existsSync('./scripts/install.sh')) {
     await setup.setup();
     process.exit(0);
   }
@@ -28,10 +28,10 @@ const os = require('os');
   app.get('/', (req, res) => {
     res.send('API Running!');
   });
+  
   app.use('/data/command', command_routes);
   app.use('/data/system', system_routes);
-  
-  
+
   app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
   });

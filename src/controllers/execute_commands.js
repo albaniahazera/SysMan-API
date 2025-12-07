@@ -30,41 +30,71 @@ exports.restart_jellyfin = (async (req, res) => {
     }
 });
 
-exports.update_system = (async (req, res) => {
+exports.status_jellyfin = (async (req, res) => {
     try {
-        const options = {
-            env: { ...process.env, DEBIAN_FRONTEND: 'noninteractive' },
-            timeout: 60000, 
-            stdio: 'pipe'
-        };
-        execSync('sudo apt update', options);
-        res.json({ message: 'System update completed' });
+        const status = execSync('systemctl is-active jellyfin').toString().trim();
+        res.json({ jellyfin_status: status });
     }catch (error) {
-        let stderrOutput = error.stderr ? error.stderr.toString() : 'No stderr output.';
-        console.error("System update failed:", error.message);
-        res.status(500).json({ 
-            error: 'Failed to update system', 
-            details: stderrOutput.includes('password') ? 'SUDO NOPASSWD configuration failed or timeout exceeded.' : stderrOutput 
-        });
-        
+        console.error("Jellyfin status check failed:", error.message);
+        res.status(500).json({ error: 'Failed to get jellyfin status' });
     }
 });
 
-exports.upgrade_system = (async (req, res) => {
+exports.restart_nginx = (async (req, res) => {
     try {
-        const options = {
-            env: { ...process.env, DEBIAN_FRONTEND: 'noninteractive' },
-            timeout: 60000, 
-            stdio: 'pipe'
-        };
-        execSync('sudo apt upgrade -y', options);
-        res.json({ message: 'System upgrade completed' });
+        execSync('sudo systemctl restart nginx');
+        res.json({ message: 'Nginx is restarting' });
     }catch (error) {
-        let stderrOutput = error.stderr ? error.stderr.toString() : 'No stderr output.';
-        console.error("System upgrade failed:", error.message);
-        res.status(500).json({ 
-            error: 'Failed to upgrade system', 
-            details: stderrOutput.includes('password') ? 'SUDO NOPASSWD configuration failed or timeout exceeded.' : stderrOutput 
-        });
+        console.error("Nginx restart failed:", error.message);
+        res.status(500).json({ error: 'Failed to restart nginx' });
     }
 });
+
+exports.status_nginx = (async (req, res) => {
+    try {
+        const status = execSync('systemctl is-active nginx').toString().trim();
+        res.json({ nginx_status: status });
+    }catch (error) {
+        console.error("Nginx status check failed:", error.message);
+        res.status(500).json({ error: 'Failed to get nginx status' });
+    }
+});
+
+// Optional commands for updating and upgrading the system
+// exports.update_system = (async (req, res) => {
+//     try {
+//         const options = {
+//             env: { ...process.env, DEBIAN_FRONTEND: 'noninteractive' },
+//             timeout: 60000, 
+//             stdio: 'pipe'
+//         };
+//         execSync('sudo apt update', options);
+//         res.json({ message: 'System update completed' });
+//     }catch (error) {
+//         let stderrOutput = error.stderr ? error.stderr.toString() : 'No stderr output.';
+//         console.error("System update failed:", error.message);
+//         res.status(500).json({ 
+//             error: 'Failed to update system', 
+//             details: stderrOutput.includes('password') ? 'SUDO NOPASSWD configuration failed or timeout exceeded.' : stderrOutput 
+//         });
+//     }
+// });
+
+// exports.upgrade_system = (async (req, res) => {
+//     try {
+//         const options = {
+//             env: { ...process.env, DEBIAN_FRONTEND: 'noninteractive' },
+//             timeout: 60000, 
+//             stdio: 'pipe'
+//         };
+//         execSync('sudo apt upgrade -y', options);
+//         res.json({ message: 'System upgrade completed' });
+//     }catch (error) {
+//         let stderrOutput = error.stderr ? error.stderr.toString() : 'No stderr output.';
+//         console.error("System upgrade failed:", error.message);
+//         res.status(500).json({ 
+//             error: 'Failed to upgrade system', 
+//             details: stderrOutput.includes('password') ? 'SUDO NOPASSWD configuration failed or timeout exceeded.' : stderrOutput 
+//         });
+//     }
+// });

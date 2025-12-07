@@ -1,11 +1,14 @@
+require ('dotenv').config();
+
 const path = require('path');
 const fs = require('fs');
 const { execSync } = require('child_process');
 const nodejs_version = process.version;
-const USER = process.env.SUDO_USER || process.env.USER || process.env.USERNAME;
+const USER = process.env.SUDO_USER || process.env.USER || 'nodeuser';
 const NODE_PATH = process.execPath;
 const si = require('systeminformation');
 const os = require('os');
+const port = process.env.PORT || 3000;
 
 if (USER === "root") {
     console.error("Do not run this setup script as ROOT/Administrator. Please use a standard user account with sudo privileges.");
@@ -36,13 +39,13 @@ function generate_service_file() {
 }
 
 function execute_install_sh() {
-    const script_path = path.join(__dirname, 'install.sh');
+    const script_path = path.join(__dirname, './scripts/install.sh');
     const service_path = path.join(__dirname, 'bot_server.service');
 
     console.log("\nStarting installation... You may need enter SUDO Password.");
     try {
         execSync(`sudo bash "${script_path}" "${service_path}"`, { stdio: 'inherit' });
-        console.log("\nInstallation has been executed");
+        console.log("\nInstallation Successfully. Application is set to run on port", port);
         fs.unlinkSync(script_path); 
     } catch (error) {
         console.error("\nFailed to run installation script, Make sure you have sudo access or the correct password.");
