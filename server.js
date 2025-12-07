@@ -20,7 +20,7 @@ const os = require('os');
   app.use(express.json());
   app.use(cors());
   
-  if (fs.existsSync('./install_service.sh')) {
+  if (fs.existsSync('./install.sh')) {
     await setup.setup();
     process.exit(0);
   }

@@ -31,63 +31,55 @@ exports.restart_jellyfin = (async (req, res) => {
 });
 
 exports.update_system = (async (req, res) => {
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.setHeader('Transfer-Encoding', 'chunked');
-
-    const update = spawn('sudo', ['-n' ,'apt', 'update', '-y'], {
-        env: { ...process.env, DEBIAN_FRONTEND: 'noninteractive' }
-    });
+    const update = spawn('sudo', ['-n' ,'apt', 'update', '-y'])
+    let output = '';
 
     try {
         update.stdout.on('data', (data) => {
-            res.write(data.toString());
+            output += data.toString();
         });
         update.stderr.on('data', (data) => {
-            console.error("Update process error:", data.toString());
-            res.write(`ERROR: ${data.toString()}`);
+            output += `ERROR: ${data.toString()}`;
         });
         update.on('close', (code) => {
-            res.write(`\nUpdate process exited with code ${code}\n`);
-            res.end();
+            if (code === 0) {
+                res.json({ status: 'success', message: 'System update completed', output });
+            } else {
+                res.json({ status: 'error', message: `System update failed with code ${code}`, output });
+            }
         });
         update.on('error', (error) => {
-            console.error("Update process failed:", error.message);
-            res.write(`\nERROR: ${error.message}\n`);
-            res.end();
+            res.status(500).json({error: `ERROR: ${error.message}`})
         });
     }catch (error) {
         console.error("System update failed:", error.message);
         res.status(500).json({ error: 'Failed to update system' });
     }
-})
+});
 
-exports.upgrade_system = (async (req, res) => {
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.setHeader('Transfer-Encoding', 'chunked');
-
-    const upgrade = spawn('sudo', ['-n', 'apt', 'upgrade', '-y'], {
-        env: { ...process.env, DEBIAN_FRONTEND: 'noninteractive' }
-    });
+exports.update_system = (async (req, res) => {
+    const upgrade = spawn('sudo', ['-n' ,'apt', 'upgrade', '-y'])
+    let output = '';
 
     try {
         upgrade.stdout.on('data', (data) => {
-            res.write(data.toString());
+            output += data.toString();
         });
         upgrade.stderr.on('data', (data) => {
-            console.error("Upgrade process error:", data.toString());
-            res.write(`ERROR: ${data.toString()}`);
+            output += `ERROR: ${data.toString()}`;
         });
         upgrade.on('close', (code) => {
-            res.write(`\nUpgrade process exited with code ${code}\n`);
-            res.end();
+            if (code === 0) {
+                res.json({ status: 'success', message: 'System upgrade completed', output });
+            } else {
+                res.json({ status: 'error', message: `System upgrade failed with code ${code}`, output });
+            }
         });
         upgrade.on('error', (error) => {
-            console.error("Upgrade process failed:", error.message);
-            res.write(`\nERROR: ${error.message}\n`);
-            res.end();
+            res.status(500).json({error: `ERROR: ${error.message}`})
         });
     }catch (error) {
         console.error("System upgrade failed:", error.message);
         res.status(500).json({ error: 'Failed to upgrade system' });
     }
-})
+});

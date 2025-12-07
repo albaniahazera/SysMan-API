@@ -36,7 +36,7 @@ function generate_service_file() {
 }
 
 function execute_install_sh() {
-    const script_path = path.join(__dirname, 'install_service.sh');
+    const script_path = path.join(__dirname, 'install.sh');
     const service_path = path.join(__dirname, 'bot_server.service');
 
     console.log("\nStarting installation... You may need enter SUDO Password.");
