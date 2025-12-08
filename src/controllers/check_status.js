@@ -48,11 +48,18 @@ exports.cpu_info = (async (req, res) => {
 
 exports.memory_info = (async (req, res) => {
     try {
-        const memory = await si.mem();
+        const memory = await si.memLayout();
+
+        if (memory.length === 0) {
+            return res.status(404).json({ error: 'No Memory data found' });
+        }
+
+        const first_memory = memory[0];
+
         res.json({
-            manufacturer: memory.manufacturer || 'N/A',
-            brand: memory.brand || 'N/A',
-            speed: memory.speed || 'N/A',
+            manufacturer: first_memory.manufacturer || 'N/A',
+            brand: first_memory.type || 'N/A',
+            speed: first_memory.clockSpeed ? `${first_memory.clockSpeed} MHz` : 'N/A',
         });
     }catch (error) {
         console.error('Error retrieving Memory data:', error.message);
