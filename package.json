@@ -1,10 +1,10 @@
 {
   "name": "bot-api",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "scripts": {
     "start": "node server.js",
-    "unins": "node uninstall.js",
-    "gen-ins": "node gen_ins_sh.js"
+    "uninstall": "node uninstall.js",
+    "generate-installer": "node generate_install_sh.js"
   },
   "dependencies": {
     "async": "^3.2.6",

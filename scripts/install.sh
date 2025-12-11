@@ -6,13 +6,14 @@ COMMAND="/sbin/shutdown, /sbin/reboot, /usr/bin/systemctl restart nginx, /usr/bi
 
 echo "SETUP SCRIPT"
 echo "Configuration sudoers for user: ${APP_USER}..."
-echo "Defaults:${APP_USER} !requiretty" | sudo tee /etc/sudoers.d/bot-server-config > /dev/null
-echo "${APP_USER} ALL=(ALL) NOPASSWD: ${COMMAND}" | sudo tee -a /etc/sudoers.d/bot-server-config > /dev/null
-echo "Copy file service to /etc/systemd/system/bot-server.service"
-sudo cp "$SERVICE_FILE_PATH" /etc/systemd/system/bot-server.service
+echo "Defaults:${APP_USER} !requiretty" | sudo tee /etc/sudoers.d/SysMan-server-config > /dev/null
+echo "${APP_USER} ALL=(ALL) NOPASSWD: ${COMMAND}" | sudo tee -a /etc/sudoers.d/SysMan-server-config > /dev/null
+
+echo "Copy file service to /etc/systemd/system/SysMan-server.service"
+sudo cp "$SERVICE_FILE_PATH" /etc/systemd/system/SysMan-server.service
 
 echo "Start Service..."
 sudo systemctl daemon-reload
-sudo systemctl enable bot-server.service
-sudo systemctl start bot-server.service
+sudo systemctl enable SysMan-server.service
+sudo systemctl start SysMan-server.service
 echo "Setup Success, Service has been enabled"

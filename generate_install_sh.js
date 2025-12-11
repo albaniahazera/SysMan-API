@@ -6,8 +6,8 @@ const install_sh_content = `#!/bin/bash
 SERVICE_FILE_PATH="$1"
 APP_USER=$SUDO_USER
 COMMAND="/sbin/shutdown, /sbin/reboot, /usr/bin/systemctl restart nginx, /usr/bin/systemctl is-active nginx, /usr/bin/systemctl restart jellyfin, /usr/bin/systemctl is-active jellyfin"
-SERVICE_NAME="bot-server.service"
-SUDOERS_CONFIG="/etc/sudoers.d/bot-server-config"
+SERVICE_NAME="SysMan-server.service"
+SUDOERS_CONFIG="/etc/sudoers.d/SysMan-server-config"
 
 echo "SETUP SCRIPT"
 
@@ -31,15 +31,16 @@ if sudo systemctl is-enabled "$SERVICE_NAME" >/dev/null 2>&1; then
 fi
 
 echo "Configuration sudoers for user: \${APP_USER}..."
-echo "Defaults:\${APP_USER} !requiretty" | sudo tee /etc/sudoers.d/bot-server-config > /dev/null
-echo "\${APP_USER} ALL=(ALL) NOPASSWD: \${COMMAND}" | sudo tee -a /etc/sudoers.d/bot-server-config > /dev/null
-echo "Copy file service to /etc/systemd/system/bot-server.service"
-sudo cp "$SERVICE_FILE_PATH" /etc/systemd/system/bot-server.service
+echo "Defaults:\${APP_USER} !requiretty" | sudo tee /etc/sudoers.d/SysMan-server-config > /dev/null
+echo "\${APP_USER} ALL=(ALL) NOPASSWD: \${COMMAND}" | sudo tee -a /etc/sudoers.d/SysMan-server-config > /dev/null
+
+echo "Copy file service to /etc/systemd/system/SysMan-server.service"
+sudo cp "$SERVICE_FILE_PATH" /etc/systemd/system/SysMan-server.service
 
 echo "Start Service..."
 sudo systemctl daemon-reload
-sudo systemctl enable bot-server.service
-sudo systemctl start bot-server.service
+sudo systemctl enable SysMan-server.service
+sudo systemctl start SysMan-server.service
 echo "Setup Success, Service has been enabled"`;
 
 

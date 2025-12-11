@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SERVICE_NAME="bot-server.service"
-SUDOERS_CONFIG="/etc/sudoers.d/bot-server-config"
+SERVICE_NAME="SysMan-server.service"
+SUDOERS_CONFIG="/etc/sudoers.d/SysMan-server-config"
 
 echo "UNINSTALL SCRIPT"
 echo "Stopping and disabling ${SERVICE_NAME}..."

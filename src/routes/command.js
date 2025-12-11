@@ -12,8 +12,4 @@ router.post("/status-jellyfin", check_service('status_jellyfin'), validate_api_k
 router.post("/restart-nginx", check_service('restart_nginx'), validate_api_key, restart_nginx);
 router.post("/status-nginx", check_service('status_nginx'), validate_api_key, status_nginx);
 
-// optional
-// router.post("/update", update_system);
-// router.post("/upgrade", upgrade_system);
-
 module.exports = router;

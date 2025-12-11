@@ -9,6 +9,5 @@ router.post('/cpu', check_service('cpu_info'), validate_api_key, cpu_info);
 router.post('/memory', check_service('memory_info'), validate_api_key, memory_info);
 router.post('/disk', check_service('disk_info'), validate_api_key, disk_info);
 router.post('/os', check_service('os_info'), validate_api_key, os_info);
-router.post('/ping', check_service('check_ping'), validate_api_key, ping);
 
 module.exports = router;

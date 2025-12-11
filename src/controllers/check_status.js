@@ -54,12 +54,8 @@ exports.memory_info = (async (req, res) => {
             return res.status(404).json({ error: 'No Memory data found' });
         }
 
-        const first_memory = memory[0];
-
         res.json({
-            manufacturer: first_memory.manufacturer || 'N/A',
-            brand: first_memory.type || 'N/A',
-            speed: first_memory.clockSpeed ? `${first_memory.clockSpeed} MHz` : 'N/A',
+            memory: memory
         });
     }catch (error) {
         console.error('Error retrieving Memory data:', error.message);
@@ -94,8 +90,4 @@ exports.os_info = (async (req, res) => {
         console.error('Error retrieving OS data:', error.message);
         res.status(500).json({ error: 'Failed to retrieve OS data' });
     }
-});
-
-exports.ping = ((req, res) => {
-    res.json({ message: 'pong' });
 });

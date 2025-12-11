@@ -16,7 +16,7 @@ if (USER === "root") {
 }
 
 const service_file = `[Unit]
-Description=Bot Server Service
+Description=SysMan Server Service for controlling server with http
 After=network.target
 
 [Service]
@@ -32,7 +32,7 @@ WantedBy=multi-user.target
 
 
 function generate_service_file() {
-    const service_path = path.join(__dirname, 'bot-server.service');
+    const service_path = path.join(__dirname, 'SysMan-server.service');
     
     fs.writeFileSync(service_path, service_file);
     console.log("Service file created at:", service_path);
@@ -40,7 +40,7 @@ function generate_service_file() {
 
 function execute_install_sh() {
     const script_path = path.join(__dirname, './scripts/install.sh');
-    const service_path = path.join(__dirname, 'bot-server.service');
+    const service_path = path.join(__dirname, 'SysMan-server.service');
 
     if (!fs.existsSync(script_path)) {
         console.error("Installation script not found at:", script_path, "\nPlease run [npm run gen-ins] to generate it first.");
