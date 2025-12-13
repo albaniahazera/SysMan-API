@@ -31,6 +31,10 @@ const path = require('path');
   });
 
   app.use('/doc', express.static(path.join(__dirname, 'documentation')));
+  app.get('/doc', (req, res) => {
+    res.sendFile(path.join(__dirname, 'documentation', 'doc.html'));
+  });
+  
   app.use('/server/command', command_routes);
   app.use('/server/system', system_routes);
 
