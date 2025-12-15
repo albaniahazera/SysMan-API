@@ -31,13 +31,41 @@ exports.restart_jellyfin = (async (req, res) => {
 });
 
 exports.status_jellyfin = (async (req, res) => {
-    try {
-        const status = execSync('systemctl is-active jellyfin').toString().trim();
-        res.json({ jellyfin_status: status });
-    }catch (error) {
-        console.error("Jellyfin status check failed:", error.message);
-        res.status(500).json({ error: 'Failed to get jellyfin status' });
-    }
+    const command = 'systemctl';
+    const args = ['status', 'jellyfin'];
+    let output = "";
+    let err_output = "";
+
+    const process = spawn(command, args);
+
+    process.stdout.on('data', (data) => {
+        output += data.toString();
+    })
+    process.stderr.on('data', (data) => {
+        err_output += data.toString();
+    })
+
+    process.on('close', (code) => {
+        if (code !== 0) {
+            return res.status(500).json({
+                succes: false,
+                message: `Invalid command or service inactive (Code ${code})`,
+                details: err_output || output
+            });
+        }
+        res.status(200).json({ 
+            success: true,
+            service_name: 'nginx',
+            full_status: output
+        });
+    })
+    process.on('error', (err) => {
+        res.status(500).json({ 
+            success: false,
+            message: 'Failed running command system.',
+            details: err.message
+        });
+    });
 });
 
 exports.restart_nginx = (async (req, res) => {
@@ -51,11 +79,39 @@ exports.restart_nginx = (async (req, res) => {
 });
 
 exports.status_nginx = (async (req, res) => {
-    try {
-        const status = execSync('systemctl is-active nginx').toString().trim();
-        res.json({ nginx_status: status });
-    }catch (error) {
-        console.error("Nginx status check failed:", error.message);
-        res.status(500).json({ error: 'Failed to get nginx status' });
-    }
+    const command = 'systemctl';
+    const args = ['status', 'nginx'];
+    let output = "";
+    let err_output = "";
+
+    const process = spawn(command, args);
+
+    process.stdout.on('data', (data) => {
+        output += data.toString();
+    })
+    process.stderr.on('data', (data) => {
+        err_output += data.toString();
+    })
+
+    process.on('close', (code) => {
+        if (code !== 0) {
+            return res.status(500).json({
+                succes: false,
+                message: `Invalid command or service inactive (Code ${code})`,
+                details: err_output || output
+            });
+        }
+        res.status(200).json({ 
+            success: true,
+            service_name: 'nginx',
+            full_status: output
+        });
+    })
+    process.on('error', (err) => {
+        res.status(500).json({ 
+            success: false,
+            message: 'Failed running command system.',
+            details: err.message
+        });
+    });
 });
