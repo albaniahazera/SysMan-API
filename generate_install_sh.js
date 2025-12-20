@@ -5,7 +5,7 @@ const install_sh_path = path.join(script_dir, 'install.sh');
 const install_sh_content = `#!/bin/bash
 SERVICE_FILE_PATH="$1"
 APP_USER=$SUDO_USER
-COMMAND="/sbin/shutdown, /sbin/reboot, /usr/bin/systemctl restart nginx, /usr/bin/systemctl is-active nginx, /usr/bin/systemctl restart jellyfin, /usr/bin/systemctl is-active jellyfin"
+COMMAND="/sbin/shutdown, /sbin/reboot, /usr/bin/systemctl restart nginx, /usr/bin/systemctl restart jellyfin"
 SERVICE_NAME="server-mobile-manage.service"
 SUDOERS_CONFIG="/etc/sudoers.d/server-mobile-manage-config"
 

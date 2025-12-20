@@ -5,8 +5,9 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
-const command_routes = require('./src/routes/command')
-const system_routes = require('./src/routes/system')
+const command_routes = require('./src/routes/command');
+const system_routes = require('./src/routes/system');
+const logs_routes = require('./src/routes/log');
 const setup = require('./setup.js');
 const os = require('os');
 const config_watcher = require('./config/config_watcher');
@@ -35,8 +36,9 @@ const path = require('path');
     res.sendFile(path.join(__dirname, 'documentation', 'doc.html'));
   });
   
-  app.use('/server/command', command_routes);
-  app.use('/server/system', system_routes);
+  app.use('/server/commands', command_routes);
+  app.use('/server/systems', system_routes);
+  app.use('/server/logs', logs_routes);
 
   app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
