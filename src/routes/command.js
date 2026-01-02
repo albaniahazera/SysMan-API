@@ -8,7 +8,8 @@ const {
     status_jellyfin, 
     restart_nginx, 
     status_nginx, 
-    status_cloudflared
+    status_cloudflared,
+    status_postgresql
 } = require('../controllers/execute_commands');
 const check_service = require('../middleware/check_service');
 router.use(validate_api_key);
@@ -21,5 +22,7 @@ router.post("/status-jellyfin", check_service('status_jellyfin'), status_jellyfi
 router.post("/restart-nginx", check_service('restart_nginx'), restart_nginx);
 router.post("/status-nginx", check_service('status_nginx'), status_nginx);
 router.post("/status-cloudflared", check_service('status_cloudflared'), status_cloudflared);
+router.post("/status-postgresql", check_service('status_postgresql'), status_postgresql);
+
 
 module.exports = router;
